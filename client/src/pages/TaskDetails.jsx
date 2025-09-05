@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import Tabs  from "../components/Tabs";
-import  TaskColor  from "../components/ta";
+import  TaskColor  from "../components/task/TaskColor";
 import {
   useChangeSubTaskStatusMutation,
   useGetSingleTaskQuery,
