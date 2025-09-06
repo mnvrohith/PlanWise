@@ -18,6 +18,12 @@ export default function ConfirmatioDialog({
     setMsg(null);
     setOpen(false);
   };
+}
+  export function UserAction({open,setOpen,onClick = ()=>{}}){
+    const closeDialog = () => {
+      setOpen(false);
+    };
+  
 
   return (
     <>
