@@ -35,8 +35,17 @@ router.put(
 );
 router.put("/:id", protectRoute, isAdminRoute, trashTask);
 
+// Without ID
 router.delete(
-  "/delete-restore/:id?",
+  "/delete-restore",
+  protectRoute,
+  isAdminRoute,
+  deleteRestoreTask
+)
+
+// With ID
+router.delete(
+  "/delete-restore/:id",
   protectRoute,
   isAdminRoute,
   deleteRestoreTask
