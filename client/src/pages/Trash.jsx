@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   MdDelete,
   MdKeyboardArrowDown,
@@ -7,6 +8,7 @@ import {
   MdKeyboardDoubleArrowUp,
   MdOutlineRestore,
 } from "react-icons/md";
+import { useGetAllTaskQuery, useDeleteRestoreTastMutation } from "../redux/api/taskApi";
 import { tasks } from "../assets/data";
 import Title from "../components/Title";
 import Button from "../components/Button";
@@ -27,6 +29,55 @@ const Trash = () => {
   const [type, setType] = useState("delete");
   const [selected, setSelected] = useState("");
 
+  const {data, isLoading, refetch} = useGetAllTaskQuery({
+    strQuery:"",
+    isTrashed:"true",
+    search:""
+  });
+
+  const [deleteRestoreTask] = useDeleteRestoreTastMutation();
+
+  const deleteRestoreHandler = async () =>{
+    try{
+     let result ;
+
+  switch (type) {
+        case "delete":
+          result = await deleteRestoreTask({
+            id: selected,
+            actionType: "delete",
+          }).unwrap();
+          break;
+        case "deleteAll":
+          result = await deleteRestoreTask({
+            id: "",
+            actionType: "deleteAll",
+          }).unwrap();
+          break;
+        case "restore":
+          result = await deleteRestoreTask({
+            id: selected,
+            actionType: "restore",
+          }).unwrap();
+          break;
+        case "restoreAll":
+          result = await deleteRestoreTask({
+            id: "",
+            actionType: "restoreAll",
+          }).unwrap();
+          break;
+      }
+     toast.success(result?.message);
+     setTimeout(()=>{ 
+      setOpenDialog(false);
+      refetch();
+     },500);
+
+    }catch(err){
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
+  }
   const deleteAllClick = () => {
     setType("deleteAll");
     setMsg("Do you want to permenantly delete all items?");
@@ -52,6 +103,11 @@ const Trash = () => {
     setOpenDialog(true);
   };
 
+  if(isLoading){
+    return(
+      <div className = 'py-10'><Loading/></div>
+    );
+  }
   const TableHeader = () => (
     <thead className='border-b border-gray-300'>
       <tr className='text-black  text-left'>
@@ -129,7 +185,7 @@ const Trash = () => {
             <table className='w-full mb-5'>
               <TableHeader />
               <tbody>
-                {tasks?.map((tk, id) => (
+                {data?.tasks?.map((tk, id) => (
                   <TableRow key={id} item={tk} />
                 ))}
               </tbody>

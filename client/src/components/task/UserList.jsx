@@ -1,13 +1,14 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { BsChevronExpand } from "react-icons/bs";
-import { summary } from "../../assets/data";
+// import { summary } from "../../assets/data";
 import clsx from "clsx";
+import { useGetTeamListQuery } from "../../redux/services/teamApi";
 import { getInitials } from "../../utils";
 import { MdCheck } from "react-icons/md";
 
 const UserList = ({ setTeam, team }) => {
-  const data = summary.users;
+  const { data, isLoading }= useGetTeamListQuery();
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   const handleChange = (el) => {
@@ -20,7 +21,7 @@ const UserList = ({ setTeam, team }) => {
     } else {
       setSelectedUsers(team);
     }
-  }, []);
+  }, [isLoading]);
 
   return (
     <div>
