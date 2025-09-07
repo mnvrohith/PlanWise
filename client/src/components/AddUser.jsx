@@ -27,12 +27,13 @@ const AddUser = ({ open, setOpen, userData }) => {
     try {
       if (userData) {
         const res = await updateUser(data).unwrap();
+        
         toast.success(res?.message);
         if (userData?._id === user?._id) {
           dispatch(setCredentials({ ...res?.user }));
         }
       } else {
-        const res = await addNewUser({
+         await addNewUser({
           ...data,
           password: data?.email,
         }).unwrap();
